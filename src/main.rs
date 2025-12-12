@@ -34,7 +34,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!(" - Tipo: {}", ty_domain);
                 println!(" - Instancia: {}", instance_name);
                 //salir del match
-                break;
+                // break;
+            }
+
+            ServiceEvent::ServiceResolved(resolved) => {
+                println!("\n\n - Full name: {}", resolved.get_fullname());
+                println!(" - Host name: {}", resolved.get_hostname());
+
+                for ip in resolved.get_addresses() {
+                    println!(" - IP: {}", ip);
+                }
+
+                println!(" - Puerto: {}", resolved.get_port());
+                // break;
             }
 
             other => {

@@ -1,3 +1,4 @@
+use local_ip_address::local_ip;
 use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -7,8 +8,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ty_domain = "_remit_transfer._tcp.local.";
     let instance_name = "Remit";
     let host_name = "Remit.local.";
-    let ip = "192.168.100.24";
+
+    let ip = match local_ip() {
+        Ok(ip) => ip.to_string(),
+        Err(e) => {
+            eprintln!("Error al obtener la IP local: {}", e);
+            return Err(e.into());
+        }
+    };
+
     let port = 8080;
+    //properties
     let properties = None;
 
     //Inicialización del daemon
@@ -46,12 +56,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
 
                 println!(" - Puerto: {}", resolved.get_port());
-                // break;
+                println!(" - Propiedades: {:?}", resolved.get_properties());
             }
 
-            other => {
-                println!("\n Evento recibido, pero no es 'ServiceFound': {:?}", other);
-            }
+            _ => {}
         }
     }
 

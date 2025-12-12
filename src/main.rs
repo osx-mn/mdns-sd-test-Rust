@@ -19,14 +19,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let port = 8080;
     //properties
-    let properties = None;
+    let properties = [("ej_prp", "campo_de_prueba")];
 
     //Inicialización del daemon
     let mdns_daemon = ServiceDaemon::new()?;
     println!("Daemon iniciado!");
 
     //"", "", "" son metadatos opcionales (si los usaré) para emitir cosas como nombre de app, de la pc y alguna otra cosa
-    let service_info = ServiceInfo::new(ty_domain, instance_name, host_name, ip, port, properties)?;
+    let service_info = ServiceInfo::new(
+        ty_domain,
+        instance_name,
+        host_name,
+        ip,
+        port,
+        &properties[..],
+    )?;
+
     mdns_daemon.register(service_info)?;
     println!("Servicio anunciado!");
 
